@@ -552,6 +552,25 @@ When using options, make sure that your rule has some logical defaults in case t
 
 Rules with options must specify a [schema](#options-schemas).
 
+Rule options and [shared settings](../use/configure/configuration-files#configure-shared-settings) should only contain values that can be serialized to JSON: strings, numbers, booleans, `null`, arrays, and plain objects. Avoid writing rules that expect regular expressions, functions, or other non-serializable values in `context.options` or `context.settings`. For example, [`--cache`](../use/command-line-interface#--cache) compares the configuration in its serialized form, where a regular expression is just `{}`, so changing the pattern doesn't invalidate the cache and ESLint keeps reporting results for the old one. If a rule needs a regular expression, accept the pattern as a string and create the `RegExp` inside the rule:
+
+```js
+module.exports = {
+	meta: {
+		schema: [
+			{
+				type: "string",
+			},
+		],
+	},
+	create(context) {
+		const pattern = new RegExp(context.options[0] ?? "^_");
+
+		// ...
+	},
+};
+```
+
 ### Accessing the Source Code
 
 The `SourceCode` object is the main object for getting more information about the source code being linted. You can retrieve the `SourceCode` object at any time by using the `context.sourceCode` property:

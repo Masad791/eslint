@@ -716,6 +716,8 @@ ESLint determines whether a cached result is still valid from the file itself (i
 
 For example, if a module is changed in a way that introduces a problem in an unchanged file that imports it, `--cache` does not report that problem until the importing file or the configuration changes. The opposite can also happen: a problem that has already been fixed in another file continues to be reported. Run ESLint without `--cache` when you need accurate results from such rules. See [Can I use ESLint's `--cache` with typescript-eslint?](https://typescript-eslint.io/troubleshooting/faqs/eslint/#can-i-use-eslints---cache-with-typescript-eslint) for more details.
 
+The configuration is compared in its serialized form, so changes to values that can't be serialized to JSON, such as regular expressions in rule options or settings, don't invalidate the cache. See [Accessing Options Passed to a Rule](../extend/custom-rules#accessing-options-passed-to-a-rule) for how rule authors can avoid this.
+
 ##### `--cache` example
 
 {{ npx_tabs ({
